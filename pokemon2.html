@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon (Part 2)</title>
+</head>
+<body>
+    <input type="text" id="search">
+    <button id="search-btn" onclick="getData()">Search</button>
+    <div id="container"></div>
+</body>
+<script>
+    
+    async function getData(){
+        var item = document.getElementById("search");
+        item = item.value;
+        var data = JSON.parse(localStorage.getItem("pok"));
+        var id;
+        for(var i=0; i<data.length;i++){
+            if(data[i].name==item){
+                id=i+1;
+            }
+        }
+        let pokemon = await fetch('https://pokeapi.co/api/v2/pokemon/'+id);
+        let data1 = await pokemon.json();
+        console.log(data1);
+        displayData(data1);
+    }
+    function displayData(pokdata){
+        var cont = document.getElementById("container");
+        var div = document.createElement("div");
+        var id = document.createElement("h4");
+        id.innerText = "ID :"+ pokdata.id;
+        var name = document.createElement("h4");
+        name.innerText = "Name :"+pokdata.name;
+        var h = document.createElement("h4");
+        h.innerText = "Height :"+pokdata.height;
+        var w = document.createElement("h4");
+        w.innerText = "Weight :"+pokdata.weight;
+        var a = document.createElement("h4");
+        var ab = ""
+        for(var j=0;j<pokdata.abilities.length;j++){
+            ab+=pokdata.abilities[j].ability.name + ", "
+        }
+        a.innerText = "Abilities :"+ab;
+        var m = document.createElement("h4");
+        var mv = ""
+        for(var k=0;k<pokdata.moves.length;k++){
+            mv+=pokdata.moves[k].move.name + ", "
+        }
+        m.innerText = "Moves :"+mv;
+        div.append(id,name,h,w,a,m);
+        cont.append(div);
+    }
+</script>
+</html>

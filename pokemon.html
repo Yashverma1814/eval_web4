@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon(Part 1)</title>
+</head>
+<style>
+    #tab{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    h1{
+        text-align: center;
+    }
+    table, th, td{
+        border: 1px solid black;
+    }
+</style>
+<body>
+    <h1>Pokemon List</h1>
+    <div id="tab"></div>
+</body>
+<script>
+    async function getData(){
+        var data1 = JSON.parse(localStorage.getItem("pok"))
+        if(data1){
+            console.log(data1)
+            displayData(data1);
+        }
+        else{
+            let pokemon = await fetch('https://pokeapi.co/api/v2/pokemon/');
+            let data = await pokemon.json();
+            console.log(data);
+            localStorage.setItem("pok", JSON.stringify(data.results))
+            displayData(data.results);
+        }
+    }
+    function displayData(pokdata){
+        var tab = document.getElementById("tab");
+        var table = document.createElement("table");
+        var head = document.createElement("tr");
+        var ser = document.createElement("th");
+        ser.innerText = "S no.";
+        var name = document.createElement("th");
+        name.innerText = "Name"
+        head.append(ser,name);
+        table.append(head)
+        for(var i=0;i<pokdata.length;i++){
+            var tr = document.createElement("tr");
+            var td1 = document.createElement("td");
+            td1.innerText = i+1;
+            var td2 = document.createElement("td");
+            td2.innerText = pokdata[i].name;
+            tr.append(td1,td2);
+            table.append(tr);
+        }
+        tab.append(table);
+    }
+    getData();
+</script>
+</html>
